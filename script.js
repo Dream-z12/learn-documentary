@@ -1,242 +1,173 @@
-// --- 1. 数据强行初始化与清洗 ---
-let subjects = [];
-try {
-    let localData = localStorage.getItem('ns_multi_subjects');
-    // 如果之前保存的数据格式不对，强制清空，防止卡死
-    if (localData && localData.startsWith('[')) {
-        subjects = JSON.parse(localData);
-    } else {
-        subjects = [];
-    }
-} catch (e) {
-    subjects = [];
-}
+"use client"
 
-// 默认初始数据
-if (subjects.length === 0) {
-    subjects = [
-        {
-            id: 1,
-            name: '高等数学极速破局',
-            date: '2026-12-25',
-            todos: [
-                { id: 101, text: '第一章：函数与极限', completed: true },
-                { id: 102, text: '第二章：导数与微分', completed: false }
-            ],
-            files: [],
-            notes: '重点复习复合函数求导。'
-        }
-    ];
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-}
+const subjects = [
+  {
+    name: "高等数学",
+    exam: "2026/07/20",
+    days: 53,
+    completed: 8,
+    total: 12,
+    chapters: [
+      { title: "极限与连续", done: true },
+      { title: "导数与微分", done: true },
+      { title: "积分应用", done: false },
+      { title: "微分方程", done: false },
+    ],
+  },
 
-let currentSubjectId = null;
+  {
+    name: "CS61A",
+    exam: "2026/06/18",
+    days: 21,
+    completed: 11,
+    total: 15,
+    chapters: [
+      { title: "Recursion", done: true },
+      { title: "Tree Recursion", done: true },
+      { title: "Generators", done: true },
+      { title: "Scheme", done: false },
+    ],
+  },
 
-// --- 2. 页面加载完毕后的启动器 ---
-document.addEventListener('DOMContentLoaded', () => {
-    renderDashboard();
-    setInterval(updateAllCountdowns, 1000);
-});
+  {
+    name: "人工智能",
+    exam: "2026/07/02",
+    days: 35,
+    completed: 5,
+    total: 14,
+    chapters: [
+      { title: "机器学习基础", done: true },
+      { title: "神经网络", done: false },
+      { title: "Transformer", done: false },
+      { title: "LLM Agent", done: false },
+    ],
+  },
+]
 
-// --- 3. 全局核心交互函数（直接挂载到 window，确保 HTML 100% 能调用） ---
+export default function Page() {
+  return (
+    <main className="min-h-screen bg-[#07111d] overflow-hidden text-white relative">
+      {/* Background Glow */}
+      <div className="absolute top-[-150px] left-[-100px] w-[500px] h-[500px] bg-cyan-400/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-3xl" />
 
-window.renderDashboard = function() {
-    const container = document.getElementById('subjectsContainer');
-    if (!container) return;
+      {/* Header */}
+      <header className="relative z-10 flex items-center justify-between px-10 pt-10">
+        <div>
+          <h1 className="text-4xl font-semibold tracking-wide">
+            Glacier Study Space
+          </h1>
 
-    if (subjects.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:13px; margin:40px auto; text-align:center; width:100%;">💡 请在右上方注入新学科轨道</p>`;
-        return;
-    }
+          <p className="text-white/50 mt-2">
+            冰川蔚蓝学习系统
+          </p>
+        </div>
 
-    container.innerHTML = subjects.map(sub => {
-        const total = sub.todos ? sub.todos.length : 0;
-        const done = sub.todos ? sub.todos.filter(t => t.completed).length : 0;
-        const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+        <button className="px-5 py-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-xl hover:bg-white/15 transition">
+          + 添加科目
+        </button>
+      </header>
 
-        return `
-            <div class="subject-card" onclick="globalEnterWorkspace(${sub.id})">
-                <button class="btn-delete-sub" onclick="globalDeleteSubject(${sub.id}, event)">REMOVE</button>
-                <h3 class="sub-title">${sub.name}</h3>
-                <div class="sub-countdown" data-date="${sub.date}">CALCULATING...</div>
-                
-                <div class="linear-progress-wrapper">
-                    <div class="linear-progress-info">
-                        <span>完成度</span>
-                        <span>${pct}% (${done}/${total} 章节)</span>
+      {/* Subject Board */}
+      <section className="relative z-10 mt-12 px-10 overflow-x-auto">
+        <div className="flex gap-8 min-w-max pb-10">
+          {subjects.map((subject, index) => {
+            const progress = Math.round(
+              (subject.completed / subject.total) * 100
+            )
+
+            return (
+              <div
+                key={index}
+                className="w-[360px] shrink-0 rounded-[34px] border border-white/15 bg-white/10 backdrop-blur-2xl p-7 relative overflow-hidden"
+              >
+                {/* Card Glow */}
+                <div className="absolute top-[-60px] right-[-60px] w-[160px] h-[160px] rounded-full bg-cyan-300/20 blur-3xl" />
+
+                <div className="relative z-10">
+                  {/* Top */}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h2 className="text-2xl font-semibold">
+                        {subject.name}
+                      </h2>
+
+                      <p className="text-white/40 text-sm mt-1">
+                        考试时间 · {subject.exam}
+                      </p>
                     </div>
-                    <div class="linear-progress-bar">
-                        <div class="linear-progress-fill" style="width: ${pct}%"></div>
+
+                    <div className="text-right">
+                      <p className="text-xs text-white/40">
+                        距离考试
+                      </p>
+
+                      <h3 className="text-3xl font-bold text-cyan-200 mt-1">
+                        {subject.days}
+                      </h3>
+
+                      <p className="text-xs text-white/40">
+                        DAYS
+                      </p>
                     </div>
+                  </div>
+
+                  {/* Progress */}
+                  <div className="mt-8">
+                    <div className="flex justify-between text-sm text-white/60 mb-3">
+                      <span>章节完成率</span>
+
+                      <span>{progress}%</span>
+                    </div>
+
+                    <div className="w-full h-[10px] bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 transition-all duration-700"
+                        style={{
+                          width: `${progress}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Chapters */}
+                  <div className="mt-8 space-y-3">
+                    {subject.chapters.map((chapter, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between rounded-2xl px-4 py-3 border border-white/10 bg-white/5 backdrop-blur-lg"
+                      >
+                        <div>
+                          <p className="text-sm">
+                            {chapter.title}
+                          </p>
+
+                          <p className="text-xs text-white/35 mt-1">
+                            Knowledge Review
+                          </p>
+                        </div>
+
+                        <div
+                          className={`w-5 h-5 rounded-full border ${
+                            chapter.done
+                              ? "bg-cyan-300 border-cyan-200"
+                              : "border-white/30"
+                          }`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Button */}
+                  <button className="w-full mt-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400/80 to-blue-500/80 hover:opacity-90 transition-all">
+                    进入学科工作舱
+                  </button>
                 </div>
-            </div>
-        `;
-    }).join('');
-    updateAllCountdowns();
-};
-
-window.updateAllCountdowns = function() {
-    document.querySelectorAll('.sub-countdown').forEach(el => {
-        const dateStr = el.getAttribute('data-date');
-        const distance = new Date(dateStr + "T00:00:00").getTime() - new Date().getTime();
-        if (distance < 0 || isNaN(distance)) {
-            el.innerText = "TARGET DATE ARRIVED";
-            return;
-        }
-        const d = Math.floor(distance / 86400000);
-        const h = Math.floor((distance % 86400000) / 3600000);
-        el.innerText = `${d}D ${h}H REMAINING`;
-    });
-};
-
-// 【彻底修复：添加轨道】
-window.globalAddSubject = function() {
-    const nameInput = document.getElementById('newSubjectName');
-    const dateInput = document.getElementById('newSubjectDate');
-    
-    if (!nameInput || !dateInput) return;
-    
-    const name = nameInput.value.trim();
-    const date = dateInput.value;
-
-    if (!name || !date) {
-        alert('请填写学科名称并选择目标日期！');
-        return;
-    }
-
-    subjects.push({
-        id: Date.now(),
-        name: name,
-        date: date,
-        todos: [], 
-        files: [], 
-        notes: ''
-    });
-    
-    nameInput.value = ''; 
-    dateInput.value = '';
-    
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    renderDashboard();
-};
-
-window.globalDeleteSubject = function(id, event) {
-    if (event) event.stopPropagation();
-    if (confirm('确认移除该学科轨道吗？')) {
-        subjects = subjects.filter(s => s.id !== id);
-        localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-        renderDashboard();
-    }
-};
-
-window.globalEnterWorkspace = function(id) {
-    currentSubjectId = id;
-    const sub = subjects.find(s => s.id === id);
-    if (!sub) return;
-    
-    if (document.getElementById('currentSubjectTitle')) document.getElementById('currentSubjectTitle').innerText = sub.name;
-    if (document.getElementById('noteTextarea')) document.getElementById('noteTextarea').value = sub.notes || '';
-
-    if (document.getElementById('mainDashboard')) document.getElementById('mainDashboard').classList.remove('active');
-    if (document.getElementById('subjectWorkspace')) document.getElementById('subjectWorkspace').classList.add('active');
-
-    globalRenderTodos();
-    globalRenderFiles();
-};
-
-window.globalBackToDashboard = function() {
-    currentSubjectId = null;
-    if (document.getElementById('subjectWorkspace')) document.getElementById('subjectWorkspace').classList.remove('active');
-    if (document.getElementById('mainDashboard')) document.getElementById('mainDashboard').classList.add('active');
-    renderDashboard();
-};
-
-window.globalRenderTodos = function() {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    const container = document.getElementById('todoContainer');
-    if (!sub || !container) return;
-
-    container.innerHTML = (sub.todos || []).map(t => `
-        <li class="todo-item">
-            <label style="display:flex; align-items:center; gap:12px; cursor:pointer; width:85%;">
-                <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="globalToggleTodo(${t.id})">
-                <span style="${t.completed ? 'text-decoration:line-through; opacity:0.3;' : ''}">${t.text}</span>
-            </label>
-            <span onclick="globalDeleteTodo(${t.id})" style="cursor:pointer; color:var(--text-muted); font-size:11px;">✕</span>
-        </li>
-    `).join('');
-};
-
-window.globalAddTodo = function() {
-    const input = document.getElementById('newTaskInput');
-    if (!input || !input.value.trim()) return;
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    if (!sub) return;
-    
-    if (!sub.todos) sub.todos = [];
-    sub.todos.push({ id: Date.now(), text: input.value.trim(), completed: false });
-    input.value = '';
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    globalRenderTodos();
-};
-
-window.globalToggleTodo = function(id) {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    if (!sub || !sub.todos) return;
-    sub.todos = sub.todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    globalRenderTodos();
-};
-
-window.globalDeleteTodo = function(id) {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    if (!sub || !sub.todos) return;
-    sub.todos = sub.todos.filter(t => t.id !== id);
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    globalRenderTodos();
-};
-
-window.globalSaveNotes = function() {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    const textarea = document.getElementById('noteTextarea');
-    if (sub && textarea) {
-        sub.notes = textarea.value;
-        localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    }
-};
-
-window.globalHandleFileUpload = function(uploadedFiles) {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    if (!sub) return;
-    if (!sub.files) sub.files = [];
-    for (let file of uploadedFiles) {
-        sub.files.push({ id: Date.now() + Math.random(), name: file.name });
-    }
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    globalRenderFiles();
-};
-
-window.globalRenderFiles = function() {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    const container = document.getElementById('fileContainer');
-    if (!sub || !container) return;
-
-    if (!sub.files || sub.files.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:25px;">NO MATERIALS RECOGNIZED</p>';
-        return;
-    }
-    container.innerHTML = sub.files.map(f => `
-        <li class="file-item">
-            <span>📄 ${f.name}</span>
-            <span onclick="globalDeleteFile(${f.id})" style="cursor:pointer;">✕</span>
-        </li>
-    `).join('');
-};
-
-window.globalDeleteFile = function(id) {
-    const sub = subjects.find(s => s.id === currentSubjectId);
-    if (!sub || !sub.files) return;
-    sub.files = sub.files.filter(f => f.id !== id);
-    localStorage.setItem('ns_multi_subjects', JSON.stringify(subjects));
-    globalRenderFiles();
-};
+              </div>
+            )
+          })}
+        </div>
+      </section>
+    </main>
+  )
+}
