@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuraStudy | 极简美学看板</title>
+    <title>NeuraStudy | 冰川蓝自律看板</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="ambient-glow">
-        <div class="glow-sphere sphere-cyan"></div>
-        <div class="glow-sphere sphere-pink"></div>
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
     </div>
 
     <div class="app-container">
         
         <main id="mainDashboard" class="view-stage active">
             <header class="dashboard-header">
-                <div class="logo-area">
-                    <span class="logo-dot"></span>
-                    <h2>NEURA</h2>
-                </div>
+                <div class="logo-area"><span class="logo-dot"></span><h2>NEURA DASHBOARD</h2></div>
                 <div class="add-subject-box">
-                    <input type="text" id="newSubjectName" placeholder="新学科名称" class="glass-input">
+                    <input type="text" id="newSubjectName" placeholder="科目名称 (如: 高等数学)" class="glass-input">
                     <input type="date" id="newSubjectDate" class="glass-input">
-                    <button onclick="actions.addSubject()" class="btn-minimal-add">添加轨道</button>
+                    <button onclick="actions.addSubject()" class="btn-minimal-add">添加科目轨道</button>
                 </div>
             </header>
 
@@ -35,16 +32,16 @@
 
         <section id="subjectWorkspace" class="view-stage">
             <header class="workspace-header">
-                <button onclick="actions.backToDashboard()" class="btn-back">← 返回看板</button>
-                <h2 id="currentSubjectTitle" class="current-title">Loading</h2>
+                <button onclick="actions.backToDashboard()" class="btn-back">← 返回主看板</button>
+                <h2 id="currentSubjectTitle" class="current-title">学科加载中...</h2>
             </header>
 
             <div class="workspace-grid">
                 <div class="glass-card panel-tasks">
                     <div class="panel-header">
-                        <h3 class="panel-title">NODES / 知识拆解</h3>
+                        <h3 class="panel-title">CHAPTERS / 章节管理</h3>
                         <div class="task-input-group">
-                            <input type="text" id="newTaskInput" placeholder="注入新节点..." class="glass-input">
+                            <input type="text" id="newTaskInput" placeholder="输入章节或知识点名称..." class="glass-input">
                             <button onclick="actions.addTodo()" class="btn-inline-add">+</button>
                         </div>
                     </div>
@@ -54,8 +51,8 @@
                 </div>
 
                 <div class="glass-card panel-notes">
-                    <h3 class="panel-title">NOTES / 深度笔记</h3>
-                    <textarea id="noteTextarea" placeholder="在此沉淀核心思维逻辑...（已开启原子化自动保存）" oninput="actions.saveNotes()"></textarea>
+                    <h3 class="panel-title">NOTES / 随手记</h3>
+                    <textarea id="noteTextarea" placeholder="在此记录当前科目的重难点、公式或资料网盘链接...（自动保存）" oninput="actions.saveNotes()"></textarea>
                 </div>
 
                 <div class="glass-card panel-files">
@@ -63,7 +60,7 @@
                     <div class="file-drop-zone" id="dropZone">
                         <input type="file" id="fileInput" multiple style="display: none;" onchange="actions.handleFileUpload(this.files)">
                         <div class="drop-prompt" onclick="document.getElementById('fileInput').click()">
-                            <p>将复习资料拖拽至此或点击上传</p>
+                            <p>拖拽资料至此或点击上传文件</p>
                         </div>
                     </div>
                     <ul id="fileContainer" class="file-list"></ul>
