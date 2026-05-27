@@ -1,12 +1,12 @@
 :root {
-    --app-bg: #0b111e; /* 纯净的夜空深蓝色基底 */
-    --glass-bg: rgba(255, 255, 255, 0.02); /* 极薄的透光率 */
-    --glass-border: rgba(255, 255, 255, 0.05); /* 晶莹的微白边框 */
+    --app-bg: #0b111e; /* 夜空深蓝 */
+    --glass-bg: rgba(255, 255, 255, 0.02); /* 轻薄透光玻璃 */
+    --glass-border: rgba(255, 255, 255, 0.05); /* 微白高光边框 */
     --text-bright: #e2e8f0;
     --text-muted: #52607a;
-    --accent-light: #7dd3fc; /* 极光冰川蓝 */
-    --accent-dark: #38bdf8;  /* 晴空蔚蓝色 */
-    --accent-glow: #1e3a8a;  /* 深海幽蓝色 */
+    --accent-light: #7dd3fc; /* 冰川蓝 */
+    --accent-dark: #38bdf8;  /* 蔚蓝 */
+    --accent-glow: #1e3a8a;  /* 深海蓝 */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,15 +20,15 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* --- 蔚蓝艺术环境流光 --- */
+/* --- 背景流光 --- */
 .ambient-glow { position: absolute; width: 100vw; height: 100vh; z-index: 1; overflow: hidden; }
 .glow-sphere { position: absolute; border-radius: 50%; filter: blur(150px); opacity: 0.18; }
-.sphere-cyan { width: 600px; height: 600px; background: var(--accent-light); top: -10%; left: 15%; }
-.sphere-pink { width: 500px; height: 500px; background: var(--accent-glow); bottom: -5%; right: 15%; }
+.sphere-1 { width: 600px; height: 600px; background: var(--accent-light); top: -10%; left: 15%; }
+.sphere-2 { width: 500px; height: 500px; background: var(--accent-glow); bottom: -5%; right: 15%; }
 
 .app-container { position: relative; z-index: 10; width: 100vw; height: 100vh; }
 
-/* --- 柔和视图流切换 --- */
+/* --- 视图动画切换切换 --- */
 .view-stage {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     padding: 50px 60px; display: flex; flex-direction: column;
@@ -37,18 +37,16 @@ body {
 }
 .view-stage.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-/* --- 极简头部与输入组件 --- */
+/* --- 主看板组件 --- */
 .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-.logo-area { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 3px; color: var(--text-bright); }
+.logo-area { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 3px; }
 .logo-dot { width: 6px; height: 6px; background: var(--accent-dark); border-radius: 50%; box-shadow: 0 0 8px var(--accent-dark); }
 .add-subject-box { display: flex; gap: 14px; }
 .add-subject-box input { margin-bottom: 0; width: 180px; }
 
-/* 高级晶莹纯平输入框 */
 .glass-input {
     padding: 10px 14px; border: 1px solid var(--glass-border); border-radius: 10px;
-    background: rgba(255, 255, 255, 0.01); color: #fff; outline: none; font-size: 13px;
-    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.01); color: #fff; outline: none; font-size: 13px; transition: all 0.3s;
 }
 .glass-input:focus { border-color: rgba(56, 189, 248, 0.4); background: rgba(255, 255, 255, 0.03); }
 ::placeholder { color: var(--text-muted); }
@@ -59,46 +57,34 @@ body {
 }
 .btn-minimal-add:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--accent-dark); color: var(--accent-light); }
 
-/* --- 横向画廊滚动滑轨 --- */
-.subjects-slider-wrapper {
-    flex: 1; overflow-x: auto; overflow-y: hidden;
-    display: flex; align-items: center; padding-bottom: 30px;
-}
+/* --- 滑动滑轨 --- */
+.subjects-slider-wrapper { flex: 1; overflow-x: auto; overflow-y: hidden; display: flex; align-items: center; padding-bottom: 30px; }
 .subjects-grid { display: flex; gap: 28px; padding: 10px 0; min-width: 100%; }
 
-/* 极简高级感学科卡片 */
 .subject-card {
-    flex: 0 0 320px; background: var(--glass-bg);
-    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--glass-border); border-radius: 20px;
-    padding: 28px; cursor: pointer; position: relative;
+    flex: 0 0 320px; background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border); border-radius: 20px; padding: 28px; cursor: pointer; position: relative;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.subject-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255,255,255,0.03);
-    border-color: rgba(56, 189, 248, 0.3);
-    box-shadow: 0 10px 30px rgba(56, 189, 248, 0.05);
-}
+.subject-card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.05); }
 
-.sub-title { font-size: 18px; font-weight: 400; margin-bottom: 6px; color: var(--text-bright); }
+.sub-title { font-size: 18px; font-weight: 400; margin-bottom: 6px; }
 .sub-countdown { font-size: 12px; color: var(--accent-dark); font-family: monospace; letter-spacing: 0.5px; margin-bottom: 40px; }
 
-/* --- 核心：冰川蓝直线进度条 --- */
+/* --- 蔚蓝直线进度条 --- */
 .linear-progress-wrapper { margin-top: 20px; }
 .linear-progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
 .linear-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.02); border-radius: 2px; overflow: hidden; }
 .linear-progress-fill {
-    height: 100%; width: 0%; 
-    background: linear-gradient(90deg, #0284c7, var(--accent-light));
+    height: 100%; width: 0%; background: linear-gradient(90deg, #0284c7, var(--accent-light));
     border-radius: 2px; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.btn-delete-sub { position: absolute; top: 24px; right: 24px; background: none; border: none; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 0.2s; font-size: 11px; }
+.btn-delete-sub { position: absolute; top: 24px; right: 24px; background: none; border: none; color: var(--text-muted); cursor: pointer; opacity: 0; font-size: 11px; }
 .subject-card:hover .btn-delete-sub { opacity: 0.6; }
 .btn-delete-sub:hover { opacity: 1 !important; color: #ef4444; }
 
-/* --- 详情工作舱极简重构 --- */
+/* --- 工作舱布局 --- */
 .workspace-header { display: flex; align-items: center; gap: 24px; margin-bottom: 30px; }
 .btn-back { background: transparent; border: 1px solid var(--glass-border); color: var(--text-bright); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
 .btn-back:hover { background: rgba(255,255,255,0.05); border-color: var(--accent-dark); color: var(--accent-light); }
@@ -113,27 +99,10 @@ body {
 .btn-inline-add { width: 38px; height: 38px; border: 1px solid var(--glass-border); background: transparent; color: #fff; border-radius: 8px; cursor: pointer; }
 .btn-inline-add:hover { border-color: var(--accent-dark); color: var(--accent-light); }
 
-/* 任务列表 */
+/* 任务与勾选列表 */
 .scroll-container { flex: 1; overflow-y: auto; padding-right: 4px; }
 .interactive-list { list-style: none; }
 .todo-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: rgba(255,255,255,0.005); border-radius: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.01); font-size: 14px; }
-.todo-item input[type="checkbox"] { accent-color: var(--accent-dark); cursor: pointer; }
+.todo-item input[type="checkbox"] { accent-color: var(--accent-dark); cursor: pointer; width: 15px; height: 15px; }
 .todo-item.completed { opacity: 0.25; }
-.todo-item.completed span { text-decoration: line-through; }
-
-/* 优雅文本域 */
-textarea { width: 100%; height: 85%; padding: 14px; border: 1px solid rgba(255,255,255,0.01); border-radius: 12px; background: rgba(0,0,0,0.12); color: #cbd5e1; resize: none; outline: none; font-size: 13px; line-height: 1.6; font-family: inherit; }
-textarea:focus { border-color: rgba(56, 189, 248, 0.2); }
-
-/* 资料库拖拽区 */
-.file-drop-zone { border: 1px dashed rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; text-align: center; background: rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s; }
-.file-drop-zone:hover { border-color: var(--accent-dark); background: rgba(56, 189, 248, 0.02); }
-.file-drop-zone p { font-size: 12px; color: var(--text-muted); }
-.file-list { list-style: none; margin-top: 12px; overflow-y: auto; height: 100px; }
-.file-item { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.005); border-radius: 6px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); }
-
-/* 精致美化滑轨滚动条 */
-.subjects-slider-wrapper::-webkit-scrollbar { height: 4px; }
-.subjects-slider-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.1); border-radius: 10px; }
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.03); border-radius: 2px; }
+.todo-item.completed span {
